@@ -4,10 +4,10 @@ List<CategoryModel> getCategories() {
   List<CategoryModel> category = [];
   CategoryModel categoryModel = new CategoryModel();
 
-  categoryModel.categoryName = "Building";
-  categoryModel.image = "images/building.jpg";
-  category.add(categoryModel);
-  categoryModel = new CategoryModel();
+  // categoryModel.categoryName = "All";
+  // categoryModel.image = "images/building.jpg";
+  // category.add(categoryModel);
+  // categoryModel = new CategoryModel();
 
   categoryModel.categoryName = "Business";
   categoryModel.image = "images/business.jpg";

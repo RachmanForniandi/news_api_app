@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:news_api_app/pages/home.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -8,79 +7,143 @@ class LandingPage extends StatefulWidget {
   State<LandingPage> createState() => _LandingPageState();
 }
 
-class _LandingPageState extends State<LandingPage> {
+class _LandingPageState extends State<LandingPage>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  late Animation<double> _fadeImage;
+  late Animation<Offset> _slideText;
+  late Animation<double> _scaleButton;
+
+  @override
+  void initState() {
+    super.initState();
+
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1200),
+    );
+
+    _fadeImage = CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.0, 0.4, curve: Curves.easeOut),
+    );
+
+    _slideText = Tween<Offset>(begin: const Offset(0, 0.2), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.3, 0.7, curve: Curves.easeOut),
+          ),
+        );
+
+    _scaleButton = CurvedAnimation(
+      parent: _controller,
+      curve: const Interval(0.6, 1.0, curve: Curves.elasticOut),
+    );
+
+    // Mulai animasi saat halaman ditampilkan
+    _controller.forward();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        margin: EdgeInsets.symmetric(horizontal: 10.0, vertical: 10.0),
-        child: Column(
-          children: [
-            Material(
-              elevation: 5.0,
-              borderRadius: BorderRadius.circular(30.0),
-              child: ClipRRect(
-                borderRadius: BorderRadius.circular(30.0),
-                child: Image.asset(
-                  "images/building.jpg",
-                  width: MediaQuery.of(context).size.width,
-                  height: MediaQuery.of(context).size.height / 1.7,
-                  fit: BoxFit.cover,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 20),
+
+              // 📸 Gambar Header (Fade In)
+              FadeTransition(
+                opacity: _fadeImage,
+                child: Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(24),
+                    child: Image.asset(
+                      'images/building.jpg', // Ganti dengan path gambarmu
+                      width: double.infinity,
+                      height: 320,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(height: 20.0),
-            Text(
-              "News from around the\n      world for you",
-              style: TextStyle(
-                color: Colors.black,
-                fontSize: 24.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 20.0),
-            Text(
-              "Best time to read, take your time to read\n        a little more of this world",
-              style: TextStyle(
-                color: Colors.black45,
-                fontSize: 18.0,
-                fontWeight: FontWeight.w500,
-              ),
-            ),
-            SizedBox(height: 40.0),
-            GestureDetector(
-              onTap: () {
-                Navigator.pushReplacement(
-                  context,
-                  MaterialPageRoute(builder: (context) => const Home()),
-                );
-              },
-              child: Container(
-                width: MediaQuery.of(context).size.width / 1.2,
-                child: Material(
-                  borderRadius: BorderRadius.circular(30.0),
-                  elevation: 5.0,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 15.0),
-                    decoration: BoxDecoration(
-                      color: Colors.green,
-                      borderRadius: BorderRadius.circular(30.0),
-                    ),
-                    child: Center(
+
+              const SizedBox(height: 24),
+
+              // 📰 Teks Judul & Deskripsi (Slide Up)
+              SlideTransition(
+                position: _slideText,
+                child: Column(
+                  children: const [
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
                       child: Text(
-                        "Get Started",
+                        "News from around the world for you",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.w500,
+                          fontSize: 26,
+                          fontWeight: FontWeight.bold,
                         ),
+                      ),
+                    ),
+                    SizedBox(height: 12),
+                    Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 32),
+                      child: Text(
+                        "Best time to read, take your time to read a little more of this world.",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 16,
+                          color: Colors.grey,
+                          height: 1.4,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              const SizedBox(height: 40),
+
+              // 🔘 Tombol Get Started (Scale In)
+              ScaleTransition(
+                scale: _scaleButton,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 32.0),
+                  child: SizedBox(
+                    width: double.infinity,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushNamed(context, '/home');
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.green,
+                        padding: const EdgeInsets.symmetric(vertical: 16),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(30),
+                        ),
+                      ),
+                      child: const Text(
+                        "Get Started",
+                        style: TextStyle(fontSize: 18, color: Colors.white),
                       ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+
+              const SizedBox(height: 40),
+            ],
+          ),
         ),
       ),
     );
