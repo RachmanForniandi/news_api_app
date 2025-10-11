@@ -5,7 +5,7 @@ import 'dart:convert';
 class News {
   List<ArticleModel> news = [];
   String url =
-      "https://newsapi.org/v2/everything?q=tesla&from=2025-08-27&sortBy=publishedAt&apiKey=3aa66a534dbe4bdea05f7a067f7a5fec";
+      "https://newsapi.org/v2/everything?q=tesla&from=2025-10-09&sortBy=publishedAt&apiKey=3aa66a534dbe4bdea05f7a067f7a5fec";
 
   Future<void> getNews() async {
     var response = await http.get(Uri.parse(url));
